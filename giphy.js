@@ -8,20 +8,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let limit = 10
     let search = "dogs"
 
+    
+    let h1= document.createElement("h1")
+    
+    form.addEventListener("submit", (event)=>{
+        event.preventDefault()
+        giphySearch(userInput.value,select.value)
+    })
+    
+    select.addEventListener("change", (e)=>{
+        select.value = e.target.value
+     })
     const giphySearch = async (userInput, userLimit) =>{
         try{
+        content.innerHTML=" "
         let res = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${key}&q=${userInput}&limit=${userLimit}`)
-            console.log(res)
+            //debugger
+        showGif(res.data.data)
         }catch(err){
-            console.log(err)
+             console.log(err)
         }
     }
-
-    let h1= document.createElement("h1")
-
-    form.addEventListener("submit", ()=>{
-        giphySearch(search, limit)
-    })
 
     const populateSelect = () =>{
         for(let i = 1; i<=25; i++){
@@ -31,6 +38,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
           select.appendChild(option)
         }
     }
+    const showGif = (gifArr) => {
+        gifArr.forEach(gif =>{
+            let image = document.createElement("img");
+            image.src = gif.images.downsized.url;
+            content.appendChild(image);
+            // console.log(gif.images.downsized.url);
+        })
+        
+    }
+    //showGif(gifArr)
+    
     populateSelect()
-    giphySearch()
+   // giphySearch()
 })
